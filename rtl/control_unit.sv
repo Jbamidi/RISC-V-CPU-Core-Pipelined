@@ -1,8 +1,8 @@
-module control_unit(input logic [6:0] opcode, output logic RegWrite,output logic ALU_src,output logic MemRead,output logic MemWrite,
+module control_unit(input logic [6:0] opcode, output logic RegWrite,output logic ALU_Src,output logic MemRead,output logic MemWrite,
 output logic MemToReg,output logic Branch,output logic [1:0]ALU_Op );
 
 /*
-    ALUSrc    – Selects the second ALU input.
+    ALU_Src    – Selects the second ALU input.
 
     RegWrite  – Enables writing to the register file.
 
@@ -14,11 +14,7 @@ output logic MemToReg,output logic Branch,output logic [1:0]ALU_Op );
 
     Branch    – Indicates a branch instruction.
 
-    ALUOp[1:0] – Tells the ALU Control what kind of instruction family this is.
-        00 = Load/Store  
-        01 = Branch      
-        10 = R-type      
-        11 = I-type   
+    ALU_Op – Tells the ALU Control what kind of instruction family this is. 
 */
 
 
@@ -26,7 +22,7 @@ output logic MemToReg,output logic Branch,output logic [1:0]ALU_Op );
 always_comb begin
     //To prevent latching
     RegWrite = 1'b0;
-    ALU_src  = 1'b0;
+    ALU_Src  = 1'b0;
     MemRead  = 1'b0;
     MemWrite = 1'b0;
     MemToReg = 1'b0;
@@ -35,7 +31,7 @@ always_comb begin
     case(opcode)
         //R-Type
         7'b0110011:begin
-            ALU_src = 0;
+            ALU_Src = 0;
             RegWrite = 1;
             MemRead = 0;
             MemWrite = 0;
@@ -45,7 +41,7 @@ always_comb begin
         end
         //I-Type
         7'b0010011:begin
-            ALU_src = 1;
+            ALU_Src = 1;
             RegWrite = 1;
             MemRead = 0;
             MemWrite = 0;
@@ -56,7 +52,7 @@ always_comb begin
     
         //Load
         7'b0000011:begin
-            ALU_src = 1;
+            ALU_Src = 1;
             RegWrite = 1;
             MemRead = 1;
             MemWrite = 0;
@@ -66,7 +62,7 @@ always_comb begin
         end
         //Store
         7'b0100011:begin
-            ALU_src = 1;
+            ALU_Src = 1;
             RegWrite = 0;
             MemRead = 0;
             MemWrite = 1;
@@ -76,7 +72,7 @@ always_comb begin
         end
         //Branch
         7'b1100011:begin
-            ALU_src = 0;
+            ALU_Src = 0;
             RegWrite = 0;
             MemRead = 0;
             MemWrite = 0;
@@ -85,6 +81,7 @@ always_comb begin
             ALU_Op = 2'b01;
         end
     endcase
+end
 
 
 

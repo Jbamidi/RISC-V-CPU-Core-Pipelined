@@ -1,4 +1,4 @@
-module ALU_R(input logic [31:0] a, input logic [31:0] b, input logic [3:0] ALU_Sel, output logic [31:0] ALU_Out);
+module ALU(input logic [31:0] a, input logic [31:0] b, input logic [3:0] ALU_Sel, output logic [31:0] ALU_Out);
     always_comb begin
         unique case(ALU_Sel)
             4'd0: ALU_Out = a + b; //ADD

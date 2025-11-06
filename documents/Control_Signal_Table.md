@@ -5,32 +5,6 @@ Each control signal determines how the datapath components behave during instruc
 
 ---
 
-## 🧩 Control Signals per Instruction Type
-
-| Instruction Type | Opcode (Binary) | RegWrite | ALU_Src | MemRead | MemWrite | MemToReg | Branch | ALU_Op | Description |
-|------------------|-----------------|-----------|----------|----------|-----------|-----------|---------|---------|
-| **R-Type** | `0110011` | 1 | 0 | 0 | 0 | 0 | 0 | 10 | ALU operation between two registers |
-| **I-Type** | `0010011` | 1 | 1 | 0 | 0 | 0 | 0 | 11 | ALU operation with immediate |
-| **Load (LW)** | `0000011` | 1 | 1 | 1 | 0 | 1 | 0 | 00 | Read data from memory |
-| **Store (SW)** | `0100011` | 0 | 1 | 0 | 1 | 0 | 0 | 00 | Write data to memory |
-| **Branch** | `1100011` | 0 | 0 | 0 | 0 | 0 | 1 | 01 | Conditional branch based on comparison |
-| **JAL** | `1101111` | 1 | X | 0 | 0 | 0 | 0 | XX | Jump and link (stores PC+4 in rd) |
-| **JALR** | `1100111` | 1 | 1 | 0 | 0 | 0 | 0 | XX | Jump to address in rs1 + imm, stores PC+4 in rd |
-| **LUI / AUIPC** | `0110111`, `0010111` | 1 | 1 | 0 | 0 | 0 | 0 | 00 | Load or add upper immediate to PC |
-
----
-
-## 💡 Notes
-
-- `X` means “don’t care” — the signal value is irrelevant for that instruction.
-- `ALU_Op` determines which family of operations the ALU will execute:
-  - `00` → Load/Store (ADD for address calculation)
-  - `01` → Branch (SUB or compare)
-  - `10` → R-Type (ALU from funct3/funct7)
-  - `11` → I-Type (ALU with immediate)
-
----
-
 ## 🧠 Control Signal Descriptions
 
 | Signal | Bit Width | Function | Meaning of Bit Values |

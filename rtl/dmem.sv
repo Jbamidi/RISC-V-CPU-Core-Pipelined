@@ -10,7 +10,7 @@ module dmem(input logic clk, input logic MemRead, input logic MemWrite, input lo
 
     always_comb begin
         if(MemRead)begin
-            rdata <=memory[addr[9:2]];
+            rdata = memory[addr[9:2]];
         end
     end
             

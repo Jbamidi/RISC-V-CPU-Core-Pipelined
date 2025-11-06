@@ -7,12 +7,15 @@ module imem(input logic [31:0] addr, output logic [31:0] instr);
         add x3, x1, x2
 */
 
-Initial begin
+
+
+logic [31:0] memory [0:255]; //1kb of space for tetsing
+
+initial begin
     $readmemh("imem_data.hex", memory);
 end
 
-logic [31:0] memory [0:255]; //1kb of space for tetsing
-assign instr = memory[pc[9:2]];
+assign instr = memory[addr[9:2]];
 
 
 endmodule

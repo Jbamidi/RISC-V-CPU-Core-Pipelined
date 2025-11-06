@@ -2,6 +2,9 @@ module pc_next(input logic [6:0] opcode, input logic [31:0] pc, input logic [31:
 input logic [2:0] funct3, output logic [31:0] jal_data, output logic [31:0] pc_next);
 
 always_comb begin
+    // defaults
+    pc_next  = pc + 32'd4;
+    jal_data = 32'b0;
     unique case(opcode)
         //Branch
         7'b1100011: begin

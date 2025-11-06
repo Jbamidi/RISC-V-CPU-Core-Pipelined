@@ -12,6 +12,7 @@ logic [4:0] rd;
 
 //PC
 logic [31:0] pc_next;
+logic branch_enabled;
 
 //Control Signals
 logic RegWrite, ALU_Src, MemRead,MemWrite,MemToReg,Branch;
@@ -30,9 +31,6 @@ logic [31:0] rd2;
 //PC Counter
 pc_counter pc_counter(.clk(clk),.reset(reset),.pc(pc),.pc_next(pc_next));
 
-//Incrementing PC
-assign pc_next = pc + 32'd4;
-
 //Getting correct instructions based on PC
 imem imem_instruction(.addr(pc),.instr(instr));
 
@@ -48,6 +46,11 @@ assign rd = instr[11:7];
 control_unit datapath_signals(.opcode(opcode), .RegWrite(RegWrite), .ALU_Src(ALU_Src), .MemRead(MemRead),.MemWrite(MemWrite),.MemToReg(MemToReg),.Branch(Branch),.ALU_Op(ALU_Op));
 ALU_Control ALU_signals(.funct3(funct3),.funct7(funct7),.ALU_Op(ALU_Op),.ALU_Sel(ALU_Sel));
 
+//Change PC based on Branch
+branch_enabled = Branch && (rd1 == rd2);
+assign pc_next = (branch_enabled) ? (pc + imm_out) : (pc + 32'd4)
+
+
 
 //Testing Purposes
 assign reg_write_addr = rd;
@@ -56,6 +59,8 @@ assign reg_debug = RegWrite;
 //ALU operators- immediate or from register file
 regfile register_file(.clk(clk), .wenable(RegWrite),.rs1(rs1),.rs2(rs2),.rd(rd),.wdata(reg_write_data), .rd1(rd1),.rd2(rd2));
 imm_gen immediate_number(.instr(instr),.imm_out(imm_out));
+
+pc_next pc_next()
 
 //Decide what b data is going to be for ALU
 assign ALU_b = (ALU_Src) ? imm_out : rd2;

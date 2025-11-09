@@ -1,8 +1,10 @@
-module cpu_top(input logic clk, input logic reset,
-output logic [31:0] pc, output logic [31:0] instr,output logic [31:0] ALU_res, output logic [31:0] reg_write_data,output logic [4:0] reg_write_addr,
+module cpu_top_singlecycle(input logic clk, input logic reset,
+output logic [31:0] pc, output logic [31:0] op_instr,output logic [31:0] ALU_res, output logic [31:0] reg_write_data,output logic [4:0] reg_write_addr,
 output logic reg_debug);
 
 //Instruction bits
+logic [31:0] instr;
+assign op_instr = instr;
 logic [6:0] opcode;
 logic [2:0] funct3;
 logic [6:0] funct7;
@@ -27,6 +29,7 @@ logic [31:0] rd1;
 logic [31:0] rd2;
 
 
+//Stage 1 - Instruction Fetch
 
 //PC Counter
 pc_counter pc_counter(.clk(clk),.reset(reset),.pc(pc),.pc_next(pc_next));
@@ -42,6 +45,8 @@ assign rs1 = instr[19:15];
 assign rs2 = instr[24:20];
 assign rd = instr[11:7];
 
+//Stage 2 - Instruction Decode
+
 //Control signals for all datapaths
 control_unit datapath_signals(.opcode(opcode), .RegWrite(RegWrite), .ALU_Src(ALU_Src), .MemRead(MemRead),.MemWrite(MemWrite),.MemToReg(MemToReg),.Branch(Branch),.ALU_Op(ALU_Op));
 ALU_Control ALU_signals(.funct3(funct3),.funct7(funct7),.ALU_Op(ALU_Op),.ALU_Sel(ALU_Sel));
@@ -55,6 +60,8 @@ assign reg_debug = RegWrite;
 regfile register_file(.clk(clk), .wenable(RegWrite),.rs1(rs1),.rs2(rs2),.rd(rd),.wdata(reg_write_data), .rd1(rd1),.rd2(rd2));
 imm_gen immediate_number(.instr(instr),.imm_out(imm_out));
 
+//Stage 3 - Execute
+
 //Change PC based on Branch and Jump
 pc_next nextpc (.opcode(opcode),.pc(pc),.rs1(rd1),.rs2(rd2),.imm_out(imm_out),.funct3(funct3),.jal_data(jal_data_link),.pc_next(pc_next));
 
@@ -64,9 +71,12 @@ assign ALU_b = (ALU_Src) ? imm_out : rd2;
 //ALU Operation
 ALU ALU_result(.a(rd1),.b(ALU_b),.ALU_Sel(ALU_Sel), .ALU_Out(ALU_res));
 
+//Stage 4 - Memory
 
 //DMEM - still need to complete
 dmem data_memory(.clk(clk), .MemRead(MemRead),.MemWrite(MemWrite),.addr(ALU_res),.wdata(rd2),.rdata(dmem_data));
+
+//Stage 5 - Write Back
 
 //Choose what data to store back into register file
 logic is_jal, is_jalr;

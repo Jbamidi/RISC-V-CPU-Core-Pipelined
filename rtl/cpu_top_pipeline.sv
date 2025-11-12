@@ -33,8 +33,8 @@ logic flush;
 assign stall = 1'b0;
 assign flush = 1'b0;
 
-logic [31:0] pc_plus_4_in;
-logic [31:0] pc_plus_4_out;
+logic [31:0] pc_plus_4_in_if;
+logic [31:0] pc_plus_4_out_if;
 logic [31:0] instr_in;
 logic [31:0] instr_out;
 
@@ -50,9 +50,9 @@ pc_counter pc_counter(.clk(clk),.reset(reset),.pc(pc),.pc_next(pc_next));
 imem imem_instruction(.addr(pc),.instr(instr_in));
 
 // IF-ID Control
-assign pc_plus_4_in = pc + 32'd4;
+assign pc_plus_4_in_if = pc + 32'd4;
 
-if_id_reg if_id(.clk(clk),.reset(reset),.pc_plus_4_in(pc_plus_4_in),.instr_in(instr_in),.flush(flush),.stall(stall),.pc_plus_4_out(pc_plus_4_out),.instr_out(instr_out));
+if_id_reg if_id(.clk(clk),.reset(reset),.pc_plus_4_in(pc_plus_4_in),.instr_in(instr_in),.flush(flush),.stall(stall),.pc_plus_4_out(pc_plus_4_out_if),.instr_out(instr_out));
 
 assign op_instr = instr_out;
 
@@ -68,18 +68,17 @@ assign rd = instr_out[11:7];
 
 //Control signals for all datapaths
 control_unit datapath_signals(.opcode(opcode), .RegWrite(RegWrite), .ALU_Src(ALU_Src), .MemRead(MemRead),.MemWrite(MemWrite),.MemToReg(MemToReg),.Branch(Branch),.ALU_Op(ALU_Op));
-ALU_Control ALU_signals(.funct3(funct3),.funct7(funct7),.ALU_Op(ALU_Op),.ALU_Sel(ALU_Sel));
-
-
-//Testing Purposes
-assign reg_write_addr = rd;
-assign reg_debug = RegWrite;
 
 //ALU operators- immediate or from register file
 regfile register_file(.clk(clk), .wenable(RegWrite),.rs1(rs1),.rs2(rs2),.rd(rd),.wdata(reg_write_data), .rd1(rd1),.rd2(rd2));
 imm_gen immediate_number(.instr(instr_out),.imm_out(imm_out));
 
+
+
 //Stage 3 - Execute
+
+//Control Signal for ALU
+ALU_Control ALU_signals(.funct3(funct3),.funct7(funct7),.ALU_Op(ALU_Op),.ALU_Sel(ALU_Sel));
 
 //Change PC based on Branch and Jump
 pc_next nextpc (.opcode(opcode),.pc(pc),.rs1(rd1),.rs2(rd2),.imm_out(imm_out),.funct3(funct3),.jal_data(jal_data_link),.pc_next(pc_next));
@@ -106,7 +105,9 @@ assign reg_write_data =
     (is_jal | is_jalr) ? jal_data_link: (MemToReg ? dmem_data: ALU_res);
 
 
-
+//Testing Purposes
+assign reg_write_addr = rd;
+assign reg_debug = RegWrite;
 
 
 

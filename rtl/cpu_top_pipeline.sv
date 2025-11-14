@@ -72,6 +72,13 @@ logic [6:0]  opcode_wb;
 logic [31:0] pc_plus_4_wb;
 logic [31:0] instr_wb;
 
+//Hazard Detection
+logic pc_en;
+logic id_ex_flush;
+logic if_id_en;
+
+
+
 
 //Stage 1 - Instruction Fetch
 
@@ -80,6 +87,7 @@ pc_counter pc_counter(
     .clk(clk),
     .reset(reset),
     .pc(pc),
+    .pc_en(pc_en),
     .pc_next(pc_next)
 );
 
@@ -99,6 +107,7 @@ if_id_reg if_id(
     .instr_in(instr_in),
     .flush(flush),
     .stall(stall),
+    .if_id_en(if_id_en),
     .pc_plus_4_out(pc_plus_4_out_if),
     .instr_out(instr_out)
 );
@@ -143,12 +152,12 @@ imm_gen immediate_number(
     .imm_out(imm_out)
 );
 
-// IF/ID pipeline Register
+// IF/EX pipeline Register
 id_ex_reg id_ex(
     .clk(clk),
     .reset(reset),
     .stall(1'b0),
-    .flush(1'b0),
+    .flush(id_ex_flush),
 
     // Inputs from ID
     .rd1_in(rd1),
@@ -209,7 +218,8 @@ ALU_Control ALU_signals(
 //Change PC based on Branch and Jump
 pc_next nextpc (
     .opcode(opcode_ex),
-    .pc(pc),.rs1(rd1_ex),
+    .pc(pc),
+    .rs1(rd1_ex),
     .rs2(rd2_ex),
     .imm_out(imm_ex),
     .funct3(funct3_ex),
@@ -226,6 +236,17 @@ ALU ALU_result(
     .b(ALU_b),
     .ALU_Sel(ALU_Sel), 
     .ALU_Out(ALU_res)
+);
+
+//Hazard Detection
+hazard_detection hazard_det(
+    .Mem_Read(MemRead_ex),
+    .rs1(rs1),
+    .rs2(rs2),
+    .rd(rd_ex),
+    .pc_en(pc_en),
+    .if_id_en(if_id_en),
+    .id_ex_flush(id_ex_flush)
 );
 
 // EX/MEM pipeline Register

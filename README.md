@@ -67,7 +67,7 @@ The full design is modular, easy to understand, and ready for FPGA extension.
 00500093   // addi x1, x0, 5
 00A00113   // addi x2, x0, 10
 002081B3   // add  x3, x1, x2
-
+```
 ## 🧠 Supported Instructions
 
 | Category   | Example                                           | Description                     |

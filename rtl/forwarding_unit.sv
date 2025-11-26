@@ -1,5 +1,11 @@
-module forwarding_unit(input logic [4:0] rd_mem,input logic [4:0] rd_wb, input logic [4:0] rs1_ex, input logic [4:0] rs2_ex, input logic RegWrite_mem, input logic RegWrite_wb,
-output logic [1:0] forwardA, output logic [1:0] forwardB);
+module forwarding_unit(input logic  [4:0] rd_mem,
+                       input logic  [4:0] rd_wb, 
+                       input logic  [4:0] rs1_ex, 
+                       input logic  [4:0] rs2_ex, 
+                       input logic        RegWrite_mem, 
+                       input logic        RegWrite_wb,
+                       output logic [1:0] forwardA, 
+                       output logic [1:0] forwardB);
 
     always_comb begin
         

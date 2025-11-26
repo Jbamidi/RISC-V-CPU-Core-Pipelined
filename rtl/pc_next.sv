@@ -1,5 +1,12 @@
-module pc_next(input logic [6:0] opcode, input logic [31:0] pc, input logic [31:0] rs1, input logic [31:0] rs2, input logic [31:0] imm_out, 
-input logic [2:0] funct3, output logic [31:0] jal_data, output logic [31:0] pc_next, output logic branch_taken);
+module pc_next(input logic  [6:0]  opcode, 
+               input logic  [31:0] pc, 
+               input logic  [31:0] rs1, 
+               input logic  [31:0] rs2, 
+               input logic  [31:0] imm_out, 
+               input logic  [2:0]  funct3, 
+               output logic [31:0] jal_data, 
+               output logic [31:0] pc_next, 
+               output logic        branch_taken);
 
 always_comb begin
     // defaults

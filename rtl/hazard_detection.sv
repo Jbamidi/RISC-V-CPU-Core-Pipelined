@@ -1,5 +1,10 @@
-module hazard_detection(input logic Mem_Read, input logic [4:0] rs1, input logic [4:0] rs2, input logic [4:0] rd, 
-output logic pc_en, output logic if_id_en, output logic id_ex_flush);
+module hazard_detection(input logic       Mem_Read, 
+                        input logic [4:0] rs1, 
+                        input logic [4:0] rs2, 
+                        input logic [4:0] rd, 
+                        output logic      pc_en, 
+                        output logic      if_id_en, 
+                        output logic      id_ex_flush);
 
     always_comb begin
         if (Mem_Read && (rd != 5'd0) && ((rd == rs1) || (rd == rs2)))begin

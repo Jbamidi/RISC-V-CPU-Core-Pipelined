@@ -1,4 +1,8 @@
-module pc_counter(input logic clk, input logic reset, input logic [31:0] pc_next, input logic pc_en, output logic [31:0] pc);
+module pc_counter(input logic         clk, 
+                  input logic         reset, 
+                  input logic  [31:0] pc_next, 
+                  input logic         pc_en, 
+                  output logic [31:0] pc);
     always_ff @(posedge clk or posedge reset)begin
         //Reset makes PC go back to 0
         if (reset) begin

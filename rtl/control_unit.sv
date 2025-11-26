@@ -1,5 +1,11 @@
-module control_unit(input logic [6:0] opcode, output logic RegWrite,output logic ALU_Src,output logic MemRead,output logic MemWrite,
-output logic MemToReg,output logic Branch,output logic [1:0]ALU_Op );
+module control_unit(input logic  [6:0] opcode, 
+                    output logic       RegWrite,
+                    output logic       ALU_Src,
+                    output logic       MemRead,
+                    output logic       MemWrite,
+                    output logic       MemToReg,
+                    output logic       Branch,
+                    output logic [1:0] ALU_Op );
 
 /*
     ALU_Src    – Selects the second ALU input.

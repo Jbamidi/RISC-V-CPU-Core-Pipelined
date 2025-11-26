@@ -1,7 +1,11 @@
-module cpu_top_singlecycle(input logic clk, input logic reset,
-output logic [31:0] pc, output logic [31:0] op_instr,output logic [31:0] ALU_res, output logic [31:0] reg_write_data,output logic [4:0] reg_write_addr,
-output logic reg_debug);
-
+module cpu_top_singlecycle(input logic         clk, 
+                           input logic         reset,
+                           output logic [31:0] pc, 
+                           output logic [31:0] op_instr,
+                           output logic [31:0] ALU_res, 
+                           output logic [31:0] reg_write_data,
+                           output logic [4:0]  reg_write_addr,
+                           output logic        reg_debug);
 //Instruction bits
 logic [31:0] instr;
 assign op_instr = instr;

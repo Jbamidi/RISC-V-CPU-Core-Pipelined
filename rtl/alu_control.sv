@@ -1,4 +1,7 @@
-module ALU_Control(input logic [2:0] funct3, input logic [6:0] funct7, input logic [1:0] ALU_Op, output logic [3:0] ALU_Sel);
+module ALU_Control(input logic  [2:0] funct3, 
+                   input logic  [6:0] funct7, 
+                   input logic  [1:0] ALU_Op, 
+                   output logic [3:0] ALU_Sel);
 
 
     always_comb begin    

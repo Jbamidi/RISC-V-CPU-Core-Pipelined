@@ -10,6 +10,7 @@ module pc_counter(input logic         clk,
         end
         else if (pc_en) begin
             pc <= pc_next;
+        end
     end
 
 
